@@ -298,13 +298,15 @@ public class DartAnalyzerSensor implements Sensor {
 
     private void recordIssues(SensorContext sensorContext, List<DartAnalyzerReportIssue> issues) {
         // Record issues
+        LOGGER.warn(" sensorContext.fileSystem().baseDir() = {}", sensorContext.fileSystem().baseDir());
         issues.forEach(i -> {
             File file = new File(sensorContext.fileSystem().baseDir(), i.getFilePath());
             LOGGER.debug("Inside issue forEach, file absolute path: {}", file.getPath());
+            LOGGER.warn(" file path = {}", i.getFilePath());
 
-            FilePredicate fp = sensorContext.fileSystem().predicates().hasRelativePath(file.getPath());
+            FilePredicate fp = sensorContext.fileSystem().predicates().hasAbsolutePath(file.getAbsolutePath());
             if (!sensorContext.fileSystem().hasFiles(fp)) {
-                LOGGER.warn("File not included in SonarQube {}", file.getPath());
+                LOGGER.warn("File not included in SonarQube {}", file.getAbsolutePath());
             } else {
                 InputFile inputFile = sensorContext.fileSystem().inputFile(fp);
                 NewIssueLocation nil = new DefaultIssueLocation().on(inputFile)
