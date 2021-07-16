@@ -300,11 +300,11 @@ public class DartAnalyzerSensor implements Sensor {
         // Record issues
         issues.forEach(i -> {
             File file = new File(sensorContext.fileSystem().baseDir(), i.getFilePath());
-            LOGGER.debug("Inside issue forEach, file absolute path: {}", file.getAbsolutePath());
+            LOGGER.debug("Inside issue forEach, file absolute path: {}", file.getPath());
 
-            FilePredicate fp = sensorContext.fileSystem().predicates().hasAbsolutePath(file.getAbsolutePath());
+            FilePredicate fp = sensorContext.fileSystem().predicates().hasRelativePath(file.getPath());
             if (!sensorContext.fileSystem().hasFiles(fp)) {
-                LOGGER.warn("File not included in SonarQube {}", file.getAbsoluteFile());
+                LOGGER.warn("File not included in SonarQube {}", file.getPath());
             } else {
                 InputFile inputFile = sensorContext.fileSystem().inputFile(fp);
                 NewIssueLocation nil = new DefaultIssueLocation().on(inputFile)
